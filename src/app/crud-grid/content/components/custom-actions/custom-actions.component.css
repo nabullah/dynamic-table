@@ -1,0 +1,9 @@
+button {
+  margin: 0 6px 0 6px !important;
+}
+
+@media (max-width: 959px) {
+  button {
+    margin: 0 6px 10px 6px !important;
+  }
+}

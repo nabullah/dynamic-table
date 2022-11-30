@@ -1,0 +1,28 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ configService.entities[entity].label }}: <span
+      *ngIf="configService.isMandatory(configService.form.controls[entity])">*</span>
+  </mat-label>
+  <mat-select [formControlName]="entity">
+    <mat-option *ngFor="let choice of configService.entities[entity]?.choices"
+      [value]="choice.value">
+      {{ choice.display_name }}
+    </mat-option>
+  </mat-select>
+  <mat-error
+    *ngIf="configService.form.controls[entity]?.hasError('email') && !configService.form.controls[entity]?.hasError('required')">
+    Please enter a valid email
+  </mat-error>
+  <mat-error
+    *ngIf="configService.form.controls[entity]?.hasError('maxlength') && !configService.form.controls[entity]?.hasError('required')">
+    Maximum allowed length is {{
+    configService.form.controls[entity].errors?.['maxlength']?.requiredLength }} characters
+  </mat-error>
+  <mat-error
+    *ngIf="configService.form.controls[entity]?.hasError('minlength') && !configService.form.controls[entity]?.hasError('required')">
+    Minimum allowed length is {{
+    configService.form.controls[entity].errors?.['minlength']?.requiredLength }} characters
+  </mat-error>
+  <mat-error *ngIf="configService.form.controls[entity]?.hasError('required')">
+    {{ configService.entities[entity].label }} is <strong>required</strong>
+  </mat-error>
+</mat-form-field>

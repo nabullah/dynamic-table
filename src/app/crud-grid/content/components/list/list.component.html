@@ -1,0 +1,329 @@
+<mat-card class="card-list-sec">
+  <mat-card-header>
+    <mat-card-title>
+      <span>
+        <ng-container
+          *ngIf="
+            (configService.onConfigUpdated$ | async)?.model?.customTitle?.list;
+            else defaultTitle
+          "
+        >
+          {{
+            (configService.onConfigUpdated$ | async)?.model?.customTitle?.list
+          }}
+        </ng-container>
+        <ng-template #defaultTitle>
+          {{ (configService.onConfigUpdated$ | async)?.model?.title }} List
+        </ng-template>
+      </span>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <ng-container
+      *ngIf="
+        (configService.onConfigUpdated$ | async)?.model?.permission
+          ?.createaccess
+      "
+    >
+      <ng-container
+        *ngIf="
+          (configService.onConfigUpdated$ | async)?.model?.listView?.actions
+            ?.add
+        "
+      >
+        <button
+          type="button"
+          mat-raised-button
+          color="accent"
+          (click)="onAdd()"
+          class="add-button"
+        >
+          Add
+        </button>
+      </ng-container>
+    </ng-container>
+    <div
+      class="custom-actions-on-top"
+      *ngIf="
+        (configService.onConfigUpdated$ | async)?.model?.listView?.actionsOnTop
+      "
+    >
+      <ecc-custom-actions
+        [customActions]="
+          (configService.onConfigUpdated$ | async)?.model?.listView
+            ?.customActions
+        "
+        [data]="dataSource"
+      >
+      </ecc-custom-actions>
+    </div>
+    <ng-container
+      *ngIf="
+        (configService.onConfigUpdated$ | async)?.model?.listView?.globalFilter
+      "
+    >
+      <div
+        class="global-filter"
+        [ngClass]="{
+          'column-filter-enabled': (configService.onConfigUpdated$ | async)
+            ?.model?.listView?.columnFilter,
+          'refresh-enabled': (configService.onConfigUpdated$ | async)
+            ?.model?.listView?.refreshButton
+        }"
+      >
+        <div fxLayout="row" fxLayoutAlign="flex-start" fxLayoutGap="15px">
+          <div fxFlex="100">
+            <mat-form-field appearance="outline">
+              <mat-label
+                >{{
+                  (configService.onConfigUpdated$ | async)?.model?.listView
+                    ?.globalFilterLabel
+                }}
+              </mat-label>
+              <input matInput type="text" (keyup)="onGlobalFilter($event)" />
+              <button
+                type="button"
+                mat-icon-button
+                matSuffix
+                aria-label="Search"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <div
+      class="column-filter-toggle"
+      [ngClass]="{
+        hide: !(configService.onConfigUpdated$ | async)?.model?.listView
+          ?.columnFilter && !(configService.onConfigUpdated$ | async)?.model?.listView
+          ?.refreshButton
+      }"
+    >
+      <button
+        *ngIf="(configService.onConfigUpdated$ | async)?.model?.listView?.columnFilter"
+        (click)="configService.toggleColumnFilterStatus()"
+        mat-icon-button
+        #tooltip="matTooltip"
+        matTooltip="Toggle column filter"
+        matTooltipPosition="above"
+      >
+        <mat-icon>filter_alt</mat-icon>
+      </button>
+      <button
+        *ngIf="(configService.onConfigUpdated$ | async)?.model?.listView?.refreshButton"
+        (click)="configService.refreshList()"
+        mat-icon-button
+        #tooltip="matTooltip"
+        matTooltip="Refresh table data"
+        matTooltipPosition="above"
+      >
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+    <div
+      class="table-container"
+      [ngClass]="{
+        sticky: (configService.onConfigUpdated$ | async)?.model?.listView
+          ?.fixHeader
+      }"
+    >
+      <table mat-table [dataSource]="dataSource" matSort fixedLayout="true">
+        <!-- Column definitions -->
+        <ng-container
+          *ngFor="
+            let entity of (configService.onConfigUpdated$ | async)?.model
+              ?.listView?.order; let i = index
+          "
+        >
+          <ng-container [matColumnDef]="entity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <!-- [ngStyle]="{'width': (configService.onConfigUpdated$ | async)?.model
+              ?.listView?.colsWidth && (configService.onConfigUpdated$ | async)?.model
+                  ?.listView?.colsWidth[i] || 'auto'} -->
+              {{ configService.entities[entity].label }}
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <ng-container
+                *ngIf="configService.columnTemplates[entity]; else simpleText"
+              >
+                <div
+                  *ngTemplateOutlet="
+                    configService.columnTemplates[entity];
+                    context: { element: element, entity: entity }
+                  "
+                ></div>
+              </ng-container>
+              <ng-template #simpleText>
+                {{ element[entity] }}
+              </ng-template>
+            </td>
+          </ng-container>
+        </ng-container>
+
+        <ng-container matColumnDef="__action">
+          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <td mat-cell *matCellDef="let element">
+            <ecc-custom-actions
+              [customActions]="
+                (configService.onConfigUpdated$ | async)?.model?.listView
+                  ?.customRowActions
+              "
+              [data]="element"
+            >
+            </ecc-custom-actions>
+            <ng-container
+              *ngIf="
+                (configService.onConfigUpdated$ | async)?.model?.permission
+                  ?.editaccess
+              "
+            >
+              <ng-container
+                *ngIf="
+                  (configService.onConfigUpdated$ | async)?.model?.listView
+                    ?.actions?.edit
+                "
+              >
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="onEdit(element)"
+                >
+                  Edit
+                </button>
+              </ng-container>
+            </ng-container>
+            <ng-container
+              *ngIf="
+                (configService.onConfigUpdated$ | async)?.model?.permission
+                  ?.deleteaccess
+              "
+            >
+              <ng-container
+                *ngIf="
+                  (configService.onConfigUpdated$ | async)?.model?.listView
+                    ?.actions?.delete
+                "
+              >
+                <button
+                  mat-raised-button
+                  color="warn"
+                  (click)="openConfirmDialog(element)"
+                >
+                  Delete
+                </button>
+              </ng-container>
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <ng-container
+          *ngFor="
+            let option of (configService.onConfigUpdated$ | async)?.model
+              ?.listView?.columnFilterOptions | keyvalue
+          "
+        >
+          <ng-container matColumnDef="{{ option.key }}_filter">
+            <td mat-cell *matHeaderCellDef class="filter">
+              <ecc-filter-field
+                [option]="option.value"
+                (filterEvent)="onColumnFilter()"
+              ></ecc-filter-field>
+            </td>
+          </ng-container>
+        </ng-container>
+        <ng-container matColumnDef="nofilter">
+          <td mat-cell *matHeaderCellDef class="filter"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="noData">
+          <td
+            mat-footer-cell
+            *matFooterCellDef
+            [attr.colspan]="configService.listViewColumns.length"
+            class="text-center text-white"
+          >
+            <div
+              class="inline-loading"
+              *ngIf="configService.loading || configService.metaLoading"
+            >
+              <mat-spinner [diameter]="20"></mat-spinner>
+            </div>
+            <ng-container
+              *ngIf="!(configService.loading || configService.metaLoading)"
+            >
+              <ng-container *ngIf="configService.error; else noData">
+                <mat-error>Error in feching data from server.</mat-error>
+              </ng-container>
+              <ng-template #noData> No data </ng-template>
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <!-- Row definitions -->
+        <tr
+          mat-header-row
+          *matHeaderRowDef="configService.listViewColumns || []; sticky: true"
+        ></tr>
+        <tr
+          mat-row
+          *matHeaderRowDef="
+            configService.filterColumns;
+            sticky: (configService.onConfigUpdated$ | async)?.model?.listView
+              ?.fixHeader
+          "
+          [ngClass]="{
+            hide: !configService.columnFilterStatus
+          }"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: configService.listViewColumns || []"
+          [ngClass]="{ hide: dataLength === 0 }"
+        ></tr>
+        <tr
+          mat-footer-row
+          *matFooterRowDef="['noData']"
+          [ngClass]="{ hide: dataLength !== 0 }"
+        ></tr>
+      </table>
+    </div>
+    <div
+      [ngClass]="{
+        hide: !(configService.onConfigUpdated$ | async)?.model?.listView
+          ?.pagination
+      }"
+    >
+      <mat-paginator
+        [length]="dataLength"
+        [pageSize]="configService.pageSize"
+        [pageSizeOptions]="configService.pageSizeOptions"
+        (page)="onChangePage($event)"
+        showFirstLastButtons
+      >
+      </mat-paginator>
+    </div>
+    <div class="items-count" *ngIf="(configService.onConfigUpdated$ | async)?.model?.listView
+    ?.showCountOnly">
+      Total Items: <span class="number">{{dataLength || 0}}</span>
+    </div>
+    <div
+      class="custom-actions"
+      *ngIf="
+        !(configService.onConfigUpdated$ | async)?.model?.listView?.actionsOnTop
+      "
+    >
+      <ecc-custom-actions
+        [customActions]="
+          (configService.onConfigUpdated$ | async)?.model?.listView
+            ?.customActions
+        "
+        [data]="dataSource"
+      >
+      </ecc-custom-actions>
+    </div>
+    <ng-content></ng-content>
+  </mat-card-content>
+</mat-card>

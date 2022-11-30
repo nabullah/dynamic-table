@@ -1,0 +1,37 @@
+<ng-container *ngFor="let action of customActions || []">
+  <ng-container *ngIf="action.type === 'button'">
+    <button
+      type="button"
+      mat-raised-button
+      [color]="action.color"
+      [class]="action.className"
+      (click)="onCustomActionsEvent(action)"
+      [disabled]="isDisabled(action) || action.loading"
+    >
+      <mat-icon *ngIf="action.loading">
+        <mat-spinner diameter="20">
+        </mat-spinner>
+      </mat-icon>
+      {{ action.text }}
+    </button>
+  </ng-container>
+  <ng-container *ngIf="action.type === 'icon'">
+    <button
+      type="button"
+      #tooltip="matTooltip"
+      [matTooltip]="action.tooltip ? action.text : ''"
+      matTooltipPosition="above"
+      mat-icon-button
+      [color]="action.color"
+      [class]="action.className"
+      (click)="onCustomActionsEvent(action)"
+      [disabled]="isDisabled(action) || action.loading"
+    >
+      <mat-icon *ngIf="action.loading">
+        <mat-spinner diameter="20">
+        </mat-spinner>
+      </mat-icon>
+      <mat-icon *ngIf="!action.loading">{{ action.icon }}</mat-icon>
+    </button>
+  </ng-container>
+</ng-container>

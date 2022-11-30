@@ -1,0 +1,190 @@
+{
+  "description": "API for dynamic addition of fields to Oscar",
+  "renders": ["application/json"],
+  "parses": [
+    "application/json",
+    "application/x-www-form-urlencoded",
+    "multipart/form-data"
+  ],
+  "actions": {
+    "POST": {
+      "id": {
+        "type": "integer",
+        "required": false,
+        "read_only": true,
+        "label": "ID"
+      },
+      "field": {
+        "type": "string",
+        "required": true,
+        "read_only": false,
+        "label": "Field Name",
+        "max_length": 100
+      },
+      "label": {
+        "type": "string",
+        "required": true,
+        "read_only": false,
+        "label": "Field Label",
+        "max_length": 100
+      },
+      "col_name": {
+        "type": "string",
+        "required": true,
+        "read_only": false,
+        "label": "Col name",
+        "max_length": 100
+      },
+      "readonly": {
+        "type": "boolean",
+        "required": false,
+        "read_only": false,
+        "label": "Read Only?"
+      },
+      "is_trainable": {
+        "type": "boolean",
+        "required": false,
+        "read_only": false,
+        "label": "Trainable?"
+      },
+      "field_type": {
+        "type": "choice",
+        "required": true,
+        "read_only": false,
+        "label": "Mapping Type",
+        "choices": [
+          {
+            "value": "FORM",
+            "display_name": "Form"
+          },
+          {
+            "value": "TABLE",
+            "display_name": "Table"
+          }
+        ]
+      },
+      "tab_type": {
+        "type": "choice",
+        "required": true,
+        "read_only": false,
+        "label": "Tab Name",
+        "choices": [
+          {
+            "value": "Invoice Info",
+            "display_name": "Invoice Info"
+          },
+          {
+            "value": "Invoice Header",
+            "display_name": "Invoice Header"
+          },
+          {
+            "value": "Other Fields",
+            "display_name": "Other Fields"
+          },
+          {
+            "value": "Invoice Line",
+            "display_name": "Invoice Line"
+          }
+        ]
+      },
+      "value_type": {
+        "type": "choice",
+        "required": true,
+        "read_only": false,
+        "label": "Field Type",
+        "choices": [
+          {
+            "value": "extracted",
+            "display_name": "Extracted"
+          },
+          {
+            "value": "derived",
+            "display_name": "Derived"
+          }
+        ]
+      },
+      "display_order": {
+        "type": "integer",
+        "required": true,
+        "read_only": false,
+        "label": "Display Order",
+        "min_value": -32768,
+        "max_value": 32767
+      },
+      "mandatory": {
+        "type": "boolean",
+        "required": false,
+        "read_only": false,
+        "label": "Mandatory?"
+      },
+      "display_colour": {
+        "type": "choice",
+        "required": true,
+        "read_only": false,
+        "label": "Display Colour",
+        "choices": [
+          {
+            "value": "green",
+            "display_name": "Green"
+          },
+          {
+            "value": "grey",
+            "display_name": "Grey"
+          }
+        ]
+      },
+      "attr_type": {
+        "type": "string",
+        "required": false,
+        "read_only": false,
+        "label": "Attribute Type",
+        "max_length": 100
+      },
+      "options": {
+        "type": "string",
+        "required": false,
+        "read_only": false,
+        "label": "Attribute Options",
+        "max_length": 100
+      },
+      "ocr_score": {
+        "type": "boolean",
+        "required": false,
+        "read_only": false,
+        "label": "OCR Confidence Score"
+      },
+      "is_dependent": {
+        "type": "boolean",
+        "required": false,
+        "read_only": false,
+        "label": "Dependent?"
+      },
+      "relative_field": {
+        "type": "string",
+        "required": false,
+        "read_only": false,
+        "label": "Dependent Field",
+        "max_length": 200
+      },
+      "python_funcion": {
+        "type": "string",
+        "required": false,
+        "read_only": false,
+        "label": "Python Function",
+        "max_length": 100
+      },
+      "is_visible": {
+        "type": "boolean",
+        "required": false,
+        "read_only": false,
+        "label": "Hide Field?"
+      },
+      "match_toggle": {
+        "type": "boolean",
+        "required": false,
+        "read_only": false,
+        "label": "Match Toggle?"
+      }
+    }
+  }
+}

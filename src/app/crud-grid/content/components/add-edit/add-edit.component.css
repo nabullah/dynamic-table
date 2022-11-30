@@ -1,0 +1,107 @@
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.form-action-section {
+  display: flex;
+  align-items: center;
+  float: right;
+}
+
+.inline-loading {
+  display: inline-block;
+}
+button {
+  margin: 0 6px !important;
+}
+.mat-form-field {
+  width: 100%;
+}
+.wrap-form-field {
+  margin: 0 0.4em;
+}
+.file-input {
+  display: none !important;
+}
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+.mat-radio-group {
+  display: block;
+  margin-top: 5px;
+}
+.mat-radio-error {
+  margin-top: 0;
+}
+::ng-deep
+  .mat-form-field-readonly
+  .mat-form-field-wrapper
+  .mat-form-field-flex
+  .mat-form-field-outline
+  .mat-form-field-outline-start {
+  background-color: rgba(127, 127, 127, 0.25) !important;
+}
+::ng-deep
+  .mat-form-field-readonly
+  .mat-form-field-wrapper
+  .mat-form-field-flex
+  .mat-form-field-outline
+  .mat-form-field-outline-gap {
+  background-color: rgba(127, 127, 127, 0.25) !important;
+}
+::ng-deep
+  .mat-form-field-readonly
+  .mat-form-field-wrapper
+  .mat-form-field-flex
+  .mat-form-field-outline
+  .mat-form-field-outline-end {
+  background-color: rgba(127, 127, 127, 0.25) !important;
+}
+::ng-deep
+  .mat-form-field-readonly input {
+    color: rgba(0, 0, 0, 0.38);
+  }
+::ng-deep
+  .mat-form-field-disabled.mat-form-field-type-mat-select .mat-form-field-outline {
+    background-color: rgba(127, 127, 127, 0.25) !important;
+  }
+.mat-chip.mat-standard-chip {
+  background-color: #3b4263;
+  color: #fff;
+  min-height: 22px;
+  font-size: 11px;
+}
+.mat-chip.mat-standard-chip .mat-chip-remove {
+  color: #fff;
+  opacity: 1;
+  font-size: 15px;
+  top: 1px;
+  position: relative;
+  right: 0;
+}
+.note {
+  padding: 0 5px;
+}
+.fields-heading {
+  font-weight: bold;
+  margin-left: 5px;
+  margin-bottom: 0;
+  font-size: 1em;
+}
+.header-side-link {
+  float: right;
+}
+.b-field ::ng-deep label{
+  margin-top: 12px;
+}
+::ng-deep .mat-select-panel {
+  margin-top: 10px !important;
+}

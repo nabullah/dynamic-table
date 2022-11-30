@@ -1,0 +1,65 @@
+.mat-form-field {
+  display: block;
+}
+mat-card {
+  margin-top: 20px;
+}
+.wrap-form-field {
+  margin: 0 0.5em;
+}
+.title-text {
+  margin: 0 1em 1em;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+::ng-deep
+  .mat-form-field-readonly
+  .mat-form-field-wrapper
+  .mat-form-field-flex
+  .mat-form-field-outline
+  .mat-form-field-outline-start {
+  background-color: rgba(127, 127, 127, 0.25) !important;
+}
+::ng-deep
+  .mat-form-field-readonly
+  .mat-form-field-wrapper
+  .mat-form-field-flex
+  .mat-form-field-outline
+  .mat-form-field-outline-gap {
+  background-color: rgba(127, 127, 127, 0.25) !important;
+}
+::ng-deep
+  .mat-form-field-readonly
+  .mat-form-field-wrapper
+  .mat-form-field-flex
+  .mat-form-field-outline
+  .mat-form-field-outline-end {
+  background-color: rgba(127, 127, 127, 0.25) !important;
+}
+::ng-deep .mat-form-field-readonly input {
+  color: rgba(0, 0, 0, 0.38);
+}
+button {
+  margin: 0 8px !important;
+}
+.form-action-section {
+  display: flex;
+  align-items: center;
+  float: right;
+}
+.text-center {
+  text-align: center;
+}
+.inline-loading {
+  display: inline-block;
+}
+.note {
+  padding: 0 7px;
+}
+.no-data-message {
+  text-align: center;
+}
+::ng-deep.mat-form-field-subscript-wrapper{
+  margin-top: 0.5rem !important;
+}

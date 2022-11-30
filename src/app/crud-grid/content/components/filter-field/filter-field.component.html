@@ -1,0 +1,27 @@
+
+<div class="filter-sec">
+<mat-form-field appearance="outline" [style.fontSize.px]=12>
+  <mat-label>{{ option.label }}</mat-label>
+  <input matInput type="text" (keyup)="onFilter($event)" [value]="option.value">
+  <button mat-icon-button matSuffix aria-label="Filter" [matMenuTriggerFor]="beforeMenu">
+    <mat-icon>filter_alt</mat-icon>
+  </button>
+  <mat-menu #beforeMenu="matMenu" xPosition="before">
+    <button *ngFor="let filterMatchMode of filterMatchModes" mat-menu-item
+      (click)="onChangeFilterMatchMode(filterMatchMode.mode)">
+      <ng-container *ngIf="filterMatchMode.mode === option.filterMatchMode else notSelected">
+        <mat-icon>check_circle</mat-icon>
+      </ng-container>
+      <ng-template #notSelected>
+        <mat-icon>radio_button_unchecked</mat-icon>
+      </ng-template>
+      <span>{{ filterMatchMode.label }}</span>
+    </button>
+    <hr />
+    <button mat-menu-item (click)="clearFilter()">
+      <mat-icon>hide_source</mat-icon>
+      <span>No Filter</span>
+    </button>
+  </mat-menu>
+</mat-form-field>
+</div>

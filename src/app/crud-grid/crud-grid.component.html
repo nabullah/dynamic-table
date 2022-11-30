@@ -1,0 +1,25 @@
+<ng-container *ngIf="(configService.onConfigUpdated$ | async)?.model?.showForm">
+  <ecc-add-edit #eccAddEdit></ecc-add-edit>
+</ng-container>
+<ng-container
+  *ngIf="(configService.onConfigUpdated$ | async)?.model?.showDetail"
+>
+  <ecc-detail #eccDetail></ecc-detail>
+</ng-container>
+<ng-container *ngIf="(configService.onConfigUpdated$ | async)?.model?.showList">
+  <ng-container *ngIf="!(configService.onConfigUpdated$ | async)?.model?.permission?.viewaccess">
+    <mat-card class="card-list-sec" *ngIf="!configService.metaLoading">
+      <mat-card-content>
+        <div class="no-data-message">No permission to view</div>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+  <ng-container *ngIf="(configService.onConfigUpdated$ | async)?.model?.permission?.viewaccess">
+    <ecc-list #eccList><ng-content></ng-content></ecc-list>
+  </ng-container>
+</ng-container>
+<ng-container
+  *ngIf="(configService.onConfigUpdated$ | async)?.model?.showMulti"
+>
+  <ecc-multi #eccMulti></ecc-multi>
+</ng-container>

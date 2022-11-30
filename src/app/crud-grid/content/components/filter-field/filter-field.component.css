@@ -1,0 +1,10 @@
+.mat-form-field {
+  width: 100%;
+}
+hr {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+button:focus {
+  outline: none;
+}

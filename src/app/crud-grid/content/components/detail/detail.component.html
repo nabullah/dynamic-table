@@ -1,0 +1,9 @@
+<h2>
+    <ng-container *ngIf="(configService.onConfigUpdated$ | async)?.model?.customTitle?.detail else defaultTitle">
+        {{ (configService.onConfigUpdated$ | async)?.model?.customTitle?.detail }}
+    </ng-container>
+    <ng-template #defaultTitle>
+        {{ configService.config.model.title }}
+    </ng-template>
+    Detail
+</h2>

@@ -1,0 +1,729 @@
+<ng-container *ngIf="!configService.metaLoading">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <ng-container *ngIf="!configService.selected; else edit">
+          <ng-container *ngIf="
+              (configService.onConfigUpdated$ | async)?.model?.customTitle?.add;
+              else defaultAddTitle
+            ">
+            {{
+            (configService.onConfigUpdated$ | async)?.model?.customTitle?.add
+            }}
+          </ng-container>
+          <ng-template #defaultAddTitle>
+            Add {{ (configService.onConfigUpdated$ | async)?.model?.title }}
+          </ng-template>
+        </ng-container>
+        <ng-template #edit>
+          <ng-container *ngIf="
+              (configService.onConfigUpdated$ | async)?.model?.customTitle
+                ?.edit;
+              else defaultEditTitle
+            ">
+            {{
+            (configService.onConfigUpdated$ | async)?.model?.customTitle?.edit
+            }}
+          </ng-container>
+          <ng-template #defaultEditTitle>
+            Edit {{ (configService.onConfigUpdated$ | async)?.model?.title }}
+          </ng-template>
+        </ng-template>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container *ngIf="(configService.onConfigUpdated$ | async)?.model?.formView?.customSubtitle">
+        <p class="note">{{ (configService.onConfigUpdated$ | async)?.model?.formView?.customSubtitle }}</p>
+      </ng-container>
+      <div class="loading-shade" *ngIf="configService.metaLoading; else formTemplate">
+        <mat-spinner [diameter]="40"></mat-spinner>
+      </div>
+      <ng-template #formTemplate>
+        <form [formGroup]="configService.form" (submit)="onSubmit()" #formDirective="ngForm">
+          <div fxLayout="row wrap" fxLayoutAlign="flex-start" fxLayoutGap="0 ">
+            <ng-container *ngFor="
+                let entity of (configService.onConfigUpdated$ | async)?.model
+                  ?.formView?.order;
+                let i = index
+              ">
+              <div [fxFlex.gt-sm]="configService.formColsWidth[i] || 100" [fxFlex.lt-sm]="100" [fxFlex.sm]="100"
+                *ngIf="!configService.entities[entity]?.is_header else headerField">
+                <ng-container [ngSwitch]="configService.entities[entity].type">
+                  <div class="wrap-form-field" *ngSwitchCase="'string'">
+                    <mat-form-field appearance="outline" provideReadonly>
+                      <mat-label>{{ configService.entities[entity].label }}:
+                        <span *ngIf="
+                            configService.isMandatory(
+                              configService.form.controls[entity]
+                            )
+                          ">*</span>
+                      </mat-label>
+                      <input matInput [type]="
+                          configService.entities[entity].typeOverride || 'text'
+                        " placeholder="Enter {{
+                          configService.entities[entity].label
+                        }}" [formControlName]="entity" (change)="
+                          onFieldValueChange(
+                            $event,
+                            configService.entities[entity]
+                          )
+                        " [readonly]="
+                          configService.entities[entity].read_only
+                            ? true
+                            : configService.selected
+                            ? configService.entities[entity].read_only_edit
+                            : false
+                        " />
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'email'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Please enter a valid email
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'maxlength'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Maximum allowed length is
+                        {{
+                        configService.form.controls[entity].errors?.['maxlength']
+                        ?.requiredLength
+                        }}
+                        characters
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'minlength'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Minimum allowed length is
+                        {{
+                        configService.form.controls[entity].errors?.['minlength']
+                        ?.requiredLength
+                        }}
+                        characters
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        {{ configService.entities[entity].label }} is
+                        <strong>required</strong>
+                      </mat-error>
+                      <mat-error *ngIf="configService.form.controls[entity]?.hasError( 'whitespace')">
+                        Please remove <strong>white space</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'integer'">
+                    <mat-form-field appearance="outline" provideReadonly>
+                      <mat-label>{{ configService.entities[entity].label }}:
+                        <span *ngIf="
+                            configService.isMandatory(
+                              configService.form.controls[entity]
+                            )
+                          ">*</span>
+                      </mat-label>
+                      <input matInput [type]="
+                          configService.entities[entity].typeOverride || 'number'
+                        " placeholder="Enter {{
+                          configService.entities[entity].label
+                        }}" [formControlName]="entity" (change)="
+                          onFieldValueChange(
+                            $event,
+                            configService.entities[entity]
+                          )
+                        " [readonly]="
+                          configService.entities[entity].read_only
+                            ? true
+                            : configService.selected
+                            ? configService.entities[entity].read_only_edit
+                            : false
+                        " />
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        {{ configService.entities[entity].label }} is
+                        <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'textarea'">
+                    <mat-form-field appearance="outline" provideReadonly class="textarea-field">
+                      <mat-label>{{ configService.entities[entity].label }}:
+                        <span *ngIf="
+                            configService.isMandatory(
+                              configService.form.controls[entity]
+                            )
+                          ">*</span>
+                      </mat-label>
+                      <textarea matInput placeholder="Enter {{
+                          configService.entities[entity].label
+                        }}" [formControlName]="entity" rows="3" (change)="
+                          onFieldValueChange(
+                            $event,
+                            configService.entities[entity]
+                          )
+                        " [readonly]="
+                          configService.entities[entity].read_only
+                            ? true
+                            : configService.selected
+                            ? configService.entities[entity].read_only_edit
+                            : false
+                        "></textarea>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'email'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Please enter a valid email
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'maxlength'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Maximum allowed length is
+                        {{
+                        configService.form.controls[entity].errors?.['maxlength']
+                        ?.requiredLength
+                        }}
+                        characters
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'minlength'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Minimum allowed length is
+                        {{
+                        configService.form.controls[entity].errors?.['minlength']
+                        ?.requiredLength
+                        }}
+                        characters
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        {{ configService.entities[entity].label }} is
+                        <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'choice'">
+                    <mat-form-field appearance="outline" provideReadonly>
+                      <mat-label>{{ configService.entities[entity].label }}:
+                        <span *ngIf="
+                            configService.isMandatory(
+                              configService.form.controls[entity]
+                            )
+                          ">*</span>
+                      </mat-label>
+                      <mat-select [formControlName]="entity" (selectionChange)="
+                          onFieldValueChange(
+                            $event,
+                            configService.entities[entity]
+                          )
+                        ">
+                        <!-- " [disabled]="
+                        configService.entities[entity].read_only
+                          ? true
+                          : configService.selected
+                          ? configService.entities[entity].read_only_edit
+                          : false" -->
+                        <mat-option *ngFor="
+                            let choice of configService.entities[entity]
+                              ?.choices
+                          " [value]="choice.value">
+                          {{ choice.display_name }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'email'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Please enter a valid email
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'maxlength'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Maximum allowed length is
+                        {{
+                        configService.form.controls[entity].errors?.['maxlength']
+                        ?.requiredLength
+                        }}
+                        characters
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'minlength'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Minimum allowed length is
+                        {{
+                        configService.form.controls[entity].errors?.['minlength']
+                        ?.requiredLength
+                        }}
+                        characters
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        {{ configService.entities[entity].label }} is
+                        <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'model choice'">
+                    <mat-form-field appearance="outline" provideReadonly>
+                      <mat-label>{{ configService.entities[entity].label }}:
+                        <span *ngIf="
+                            configService.isMandatory(
+                              configService.form.controls[entity]
+                            )
+                          ">*</span>
+                      </mat-label>
+                      <mat-select [formControlName]="entity" (selectionChange)="
+                          onFieldValueChange(
+                            $event,
+                            configService.entities[entity]
+                          )
+                        ">
+                        <!-- [disabled]="
+                        configService.entities[entity].read_only
+                          ? true
+                          : configService.selected
+                          ? configService.entities[entity].read_only_edit
+                          : false" -->
+                        <mat-option *ngFor="
+                            let choice of configService.modelFieldData[entity]
+                          " [value]="choice.value">
+                          {{ choice.display_name }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'email'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Please enter a valid email
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'maxlength'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Maximum allowed length is
+                        {{
+                        configService.form.controls[entity].errors?.['maxlength']
+                        ?.requiredLength
+                        }}
+                        characters
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'minlength'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Minimum allowed length is
+                        {{
+                        configService.form.controls[entity].errors?.['minlength']
+                        ?.requiredLength
+                        }}
+                        characters
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        {{ configService.entities[entity].label }} is
+                        <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'radio'">
+                    <div class="mat-form-field-appearance-outline">
+                      <div class="mat-form-field-wrapper">
+                        <mat-label>{{ configService.entities[entity].label }}:
+                          <span *ngIf="
+                              configService.isMandatory(
+                                configService.form.controls[entity]
+                              )
+                            ">*</span>
+                        </mat-label>
+                        <mat-radio-group aria-label="Select Access Type" [formControlName]="entity" (change)="
+                            onFieldValueChange(
+                              $event,
+                              configService.entities[entity]
+                            )
+                          ">
+                          <mat-radio-button *ngFor="
+                              let choice of configService.entities[entity]
+                                ?.choices
+                            " [value]="choice.value">
+                            {{ choice.display_name }}
+                          </mat-radio-button>
+                        </mat-radio-group>
+                        <div class="
+                            mat-form-field-subscript-wrapper mat-radio-error
+                          " *ngIf="
+                            configService.form.controls[entity].touched &&
+                            configService.form.controls[entity].invalid
+                          ">
+                          <mat-error *ngIf="
+                              configService.form.controls[entity]?.hasError(
+                                'email'
+                              ) &&
+                              !configService.form.controls[entity]?.hasError(
+                                'required'
+                              )
+                            ">
+                            Please enter a valid email
+                          </mat-error>
+                          <mat-error *ngIf="
+                              configService.form.controls[entity]?.hasError(
+                                'maxlength'
+                              ) &&
+                              !configService.form.controls[entity]?.hasError(
+                                'required'
+                              )
+                            ">
+                            Maximum allowed length is
+                            {{
+                            configService.form.controls[entity].errors
+                            ?.['maxlength']?.requiredLength
+                            }}
+                            characters
+                          </mat-error>
+                          <mat-error *ngIf="
+                              configService.form.controls[entity]?.hasError(
+                                'minlength'
+                              ) &&
+                              !configService.form.controls[entity]?.hasError(
+                                'required'
+                              )
+                            ">
+                            Minimum allowed length is
+                            {{
+                            configService.form.controls[entity].errors
+                            ?.['minlength']?.requiredLength
+                            }}
+                            characters
+                          </mat-error>
+                          <mat-error *ngIf="
+                              configService.form.controls[entity]?.hasError(
+                                'required'
+                              )
+                            ">
+                            {{ configService.entities[entity].label }} is
+                            <strong>required</strong>
+                          </mat-error>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'boolean'">
+                    <mat-checkbox class="b-field {{entity}}" [formControlName]="entity" (change)="onFieldValueChange(
+                      $event,
+                      configService.entities[entity]
+                    )">
+                      <!-- [disabled]="
+                    configService.entities[entity].read_only
+                      ? true
+                      : configService.selected
+                      ? configService.entities[entity].read_only_edit
+                      : false
+                  "   -->
+                      {{
+                      configService.entities[entity].label
+                      }}
+                    </mat-checkbox>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'file upload'">
+                    <div class="mat-form-field-appearance-outline">
+                      <div class="mat-form-field-wrapper">
+                        <mat-label>{{ configService.entities[entity].label }}:
+                          <span *ngIf="
+                              configService.isMandatory(
+                                configService.form.controls[entity]
+                              )
+                            ">*</span>
+                        </mat-label>
+                        <button type="button" mat-raised-button color="accent"
+                          (click)="openFileUpload(fileInput, entity)">
+                          <mat-icon>file_upload</mat-icon>
+                          Upload
+                        </button>
+                        <input type="file" #fileInput accept="*" class="file-input" (change)="
+                            onFieldValueChange(
+                              $event,
+                              configService.entities[entity]
+                            )
+                          " />
+                        <div class="mat-form-field-subscript-wrapper">
+                          <mat-error *ngIf="
+                              configService.form.controls[entity]?.touched &&
+                              configService.form.controls[entity]?.invalid
+                            ">
+                            {{ configService.entities[entity].label }} is
+                            <strong>required</strong>
+                          </mat-error>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'field'">
+                    <div class="mat-form-field-appearance-outline">
+                      <div class="mat-form-field-wrapper">
+                        <div class="mat-form-field-flex">
+                          <mat-error>Please replace field type with some other
+                            type.</mat-error>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'model tags'">
+                    <mat-form-field appearance="outline" provideReadonly>
+                      <mat-label>{{ configService.entities[entity].label }}:
+                        <span *ngIf="
+                            configService.isMandatory(
+                              configService.form.controls[entity]
+                            )
+                          ">*</span>
+                      </mat-label>
+                      <mat-chip-list #chipList [formControlName]="entity">
+                        <mat-chip *ngFor="
+                            let tag of configService.form.controls[entity].value
+                          " [selectable]="selectable" [removable]="removable" (removed)="removeTag(tag, entity)">
+                          {{ tag }}
+                          <span class="material-icons" matChipRemove *ngIf="removable">
+                            clear
+                          </span>
+                        </mat-chip>
+                        <input placeholder="Enter {{
+                            configService.entities[entity].label
+                          }}" (focus)="onFocus(entity)" #chipInput [formControl]="chipCtrl" [matAutocomplete]="auto"
+                          [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addTag($event, entity)" />
+                      </mat-chip-list>
+                      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectTag($event, entity)">
+                        <mat-option *ngFor="let choice of filteredData | async" [value]="choice.display_name">
+                          {{choice.display_name}}
+                        </mat-option>
+                      </mat-autocomplete>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'email'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Please enter a valid email
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'maxlength'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Maximum allowed length is
+                        {{
+                        configService.form.controls[entity].errors?.['maxlength']
+                        ?.requiredLength
+                        }}
+                        characters
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'minlength'
+                          ) &&
+                          !configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        Minimum allowed length is
+                        {{
+                        configService.form.controls[entity].errors?.['minlength']
+                        ?.requiredLength
+                        }}
+                        characters
+                      </mat-error>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        {{ configService.entities[entity].label }} is
+                        <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'custom tags'">
+                    <mat-form-field appearance="outline" provideReadonly class="chip-field">
+                      <mat-label>{{ configService.entities[entity].label }}:
+                        <span *ngIf="
+                            configService.isMandatory(
+                              configService.form.controls[entity]
+                            )
+                          ">*</span>
+                      </mat-label>
+                      <mat-chip-list #chipList [formControlName]="entity">
+                        <mat-chip *ngFor="
+                            let tag of configService.form.controls[entity].value
+                          " [selectable]="selectable" [removable]="removable" (removed)="removeTag(tag, entity)">
+                          {{ tag }}
+                          <span class="material-icons" matChipRemove *ngIf="removable">
+                            clear
+                          </span>
+                        </mat-chip>
+                        <input placeholder="Enter {{
+                            configService.entities[entity].label
+                          }}" #chipInput [formControl]="chipCtrl" [matChipInputFor]="chipList"
+                          [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" />
+                        <!-- (matChipInputTokenEnd)="addCustomTag($event, entity, configService.entities[entity]?.validationFunction)" -->
+                      </mat-chip-list>
+                      <mat-error *ngIf="
+                          configService.form.controls[entity]?.hasError(
+                            'required'
+                          )
+                        ">
+                        {{ configService.entities[entity].label }} is
+                        <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'date'">
+                    <mat-form-field appearance="outline" provideReadonly>
+                      <mat-label>{{configService.entities[entity].label}}</mat-label>
+                      <input matInput [matDatepicker]="picker" [formControlName]="entity" (change)="
+                        onFieldValueChange(
+                          $event,
+                          configService.entities[entity]
+                        )
+                      " [readonly]="
+                        configService.entities[entity].read_only
+                          ? true
+                          : configService.selected
+                          ? configService.entities[entity].read_only_edit
+                          : false
+                      ">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="wrap-form-field" *ngSwitchCase="'time'">
+                    <mat-form-field appearance="outline" provideReadonly>
+                      <mat-label>{{configService.entities[entity].label}}</mat-label>
+                      <input type="time" matInput [formControlName]="entity" (change)="
+                        onFieldValueChange(
+                          $event,
+                          configService.entities[entity]
+                        )
+                      " [readonly]="
+                        configService.entities[entity].read_only
+                          ? true
+                          : configService.selected
+                          ? configService.entities[entity].read_only_edit
+                          : false
+                      ">
+
+                    </mat-form-field>
+                  </div>
+                </ng-container>
+              </div>
+              <ng-template #headerField>
+                <div [fxFlex.gt-sm]="configService.formColsWidth[i] || 100" [fxFlex.lt-sm]="100" [fxFlex.sm]="100">
+                  <p class="fields-heading">
+                    {{ configService.entities[entity].label }}
+                    <ng-container
+                      *ngIf="configService.entities[entity]?.header_side_link_name && configService.entities[entity]?.header_side_link">
+                      <a class="header-side-link" [routerLink]="configService.entities[entity].header_side_link">{{
+                        configService.entities[entity].header_side_link_name }}</a>
+                    </ng-container>
+                  </p>
+                </div>
+              </ng-template>
+            </ng-container>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="flex-end" fxLayoutGap="15px">
+            <div fxFlex="100">
+              <div class="form-action-section">
+                <div class="inline-loading" *ngIf="configService.submitting">
+                  <mat-spinner [diameter]="20"></mat-spinner>
+                </div>
+                <ecc-custom-actions [customActions]="
+                    (configService.onConfigUpdated$ | async)?.model?.formView
+                      ?.customActions
+                  ">
+                </ecc-custom-actions>
+                <button *ngIf="!configService.selected" mat-raised-button color="primary"
+                  [disabled]="!(configService.onConfigUpdated$ | async)?.model?.permission?.createaccess || configService.submitting || configService.config.model.formView?.addActionDisabled">
+                  {{ (configService.onConfigUpdated$ | async)?.model?.formView?.addButtonName || 'Save' }}
+                </button>
+                <button *ngIf="configService.selected" mat-raised-button color="primary"
+                  [disabled]="!(configService.onConfigUpdated$ | async)?.model?.permission?.editaccess || configService.submitting">
+                  {{ (configService.onConfigUpdated$ | async)?.model?.formView?.editButtonName || 'Update' }}
+                </button>
+                <button mat-raised-button color="warn" type="button" (click)="onCancel()">
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</ng-container>
