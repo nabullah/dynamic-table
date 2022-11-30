@@ -28,7 +28,8 @@ export class GenericService {
   // READ
   readAll<T extends object, U extends keyof T, V>(model: T, tableName: U, extra?: HttpParams | IParams): Observable<V> {
     const params = extra ? extra : {};
-    return this.http.get<V>(`${this.API_CONFIG.baseUrl}/${model[tableName]}/`, { params });
+    // return this.http.get<V>(`${this.API_CONFIG.baseUrl}/${model[tableName]}/`, { params });
+    return this.http.get<V>(`${this.API_CONFIG.baseUrl}/${model[tableName]}-table.json`);
   }
 
   // READ ONE
@@ -84,7 +85,7 @@ export class GenericService {
   meta<T extends object, U extends keyof T, V>(model: T, tableName: U, extra?: HttpParams | IParams): Observable<V> {
     const params = extra ? extra : {};
     // return this.http.options<V>(`${this.API_CONFIG.baseUrl}/${model[tableName]}/`, { params });
-    return this.http.get<V>(`${this.API_CONFIG.baseUrl}/${model[tableName]}/`, { params });
+    return this.http.get<V>(`${this.API_CONFIG.baseUrl}/${model[tableName]}.json`, { params });
   }
 
   upload(data:any, endpoint:any) {

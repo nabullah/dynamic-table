@@ -1,4 +1,40 @@
-<h2>Sample Document</h2>
 <div class="container">
   <ecc-crud-grid #crudGrid [model]="model" (customActions)="onCustomActions($event)"></ecc-crud-grid>
+  <ng-template let-element="element" let-entity="entity" #columnTemplate>
+    <ng-container [ngSwitch]="entity">
+        <ng-container *ngSwitchCase="'is_trainable'">
+            <ng-container *ngIf="element[entity]; else noCheck">
+                <mat-icon class="green">check</mat-icon>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="'readonly'">
+            <ng-container *ngIf="element[entity]; else noCheck">
+                <mat-icon class="green">check</mat-icon>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="'mandatory'">
+            <ng-container *ngIf="element[entity]; else noCheck">
+                <mat-icon class="green">check</mat-icon>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="'ocr_score'">
+            <ng-container *ngIf="element[entity]; else noCheck">
+                <mat-icon class="green">check</mat-icon>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="'is_dependent'">
+            <ng-container *ngIf="element[entity]; else noCheck">
+                <mat-icon class="green">check</mat-icon>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="'is_visible'">
+            <ng-container *ngIf="element[entity]; else noCheck">
+                <mat-icon class="green">check</mat-icon>
+            </ng-container>
+        </ng-container>
+        <ng-template #noCheck>
+            <mat-icon class="red">close</mat-icon>
+        </ng-template>
+    </ng-container>
+</ng-template>
 </div>

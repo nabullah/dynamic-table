@@ -94,6 +94,8 @@ export class ConfigService<T extends IObjectKeys> implements OnDestroy {
 
   columnFilterStatus!: boolean;
   elementToScrollToTopOnEdit!: ElementRef;
+  globalFilter!: boolean;
+  columnFilter!: boolean;
 
   constructor(
     private genericService: GenericService,
@@ -121,8 +123,13 @@ export class ConfigService<T extends IObjectKeys> implements OnDestroy {
     this.multiColsWidth = [];
     this.columnTemplates = {};
     this.modelFieldData = {};
-  }
 
+    this.getSettings();
+  }
+  getSettings() {
+    this.globalFilter = true;
+    this.columnFilter = true;
+  }
   setColumnTemplates(field: string, template: TemplateRef<any>): void {
     this.columnTemplates[field] = template;
   }

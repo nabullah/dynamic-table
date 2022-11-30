@@ -131,9 +131,10 @@ export class MappingComponent implements OnInit {
     },
   };
   model: IModel = {
-    modelName: 'oscar-mapping.json',
+    modelName: 'oscar-mapping',
     title: 'Field Mapping',
     pageName: 'Manage Oscar Mappings',
+    showList:false,
     showAll: true,
     listView: {
       order: this.order,
@@ -142,8 +143,8 @@ export class MappingComponent implements OnInit {
         edit: false,
         delete: false,
       },
-      // globalFilter: this.settingSevice.globalFilter,
-      // columnFilter: this.settingSevice.columnFilter,
+      globalFilter: this.configService.globalFilter,
+      columnFilter: this.configService.columnFilter,
     },
     formView: {
       order: this.order,
