@@ -18,7 +18,6 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 })
 export class AddEditComponent<T extends IObjectKeys> implements OnInit {
   @ViewChild('formDirective') private formDirective!: NgForm;
-
   selectable = true;
   removable = true;
   addOnBlur = true;

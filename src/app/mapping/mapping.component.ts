@@ -28,7 +28,6 @@ interface FieldMapping {
   selector: 'app-mapping',
   templateUrl: './mapping.component.html',
   styleUrls: ['./mapping.component.scss'],
-  
 })
 export class MappingComponent implements OnInit {
   @ViewChild('crudGrid', { static: true })
@@ -80,14 +79,14 @@ export class MappingComponent implements OnInit {
     },
 
     field: {
-      type:'string',
-      read_only: false,
+      type: 'string',
+      read_only: true,
       max_length: 50,
       on_change: this.ON_FIELD_TYPE,
     },
 
     label: {
-      type:'string',
+      type: 'string',
       max_length: 50,
     },
 
@@ -124,7 +123,6 @@ export class MappingComponent implements OnInit {
       read_only: true,
       on_change: this.ON_CHANGE_RELATIVE_FIELD,
     },
-
     python_funcion: {
       type: 'choice',
       read_only: true,
@@ -134,7 +132,7 @@ export class MappingComponent implements OnInit {
     modelName: 'oscar-mapping',
     title: 'Field Mapping',
     pageName: 'Manage Oscar Mappings',
-    showList:false,
+    showList: false,
     showAll: true,
     listView: {
       order: this.order,
@@ -178,9 +176,9 @@ export class MappingComponent implements OnInit {
         this.crudGrid?.configService?.form
           .get('display_colour')!
           .setValue('green');
-        // this.entities.['is_trainable'].read_only = true;
-        // this.entities.['readonly'].read_only = true;
-        // this.entities.['ocr_score'].read_only = true;
+        this.entities['is_trainable'].read_only = true;
+        this.entities['readonly'].read_only = true;
+        this.entities['ocr_score'].read_only = true;
       } else if ((<MatSelectChange>data.event).value === 'derived') {
         this.crudGrid.configService.form
           .get('display_colour')!
@@ -194,22 +192,22 @@ export class MappingComponent implements OnInit {
     else if (funcName == this.ON_CHANGE_TRAINABLE) {
       if ((<MatCheckboxChange>data.event).checked) {
         this.crudGrid.configService.form.get('readonly')!.setValue(true);
-        // this.entities.readonly.read_only = true;
+        this.entities['readonly'].read_only = true;
       } else {
         this.crudGrid.configService.form.get('readonly')!.setValue(false);
-        // this.entities.readonly.read_only = false;
+        this.entities['readonly'].read_only = false;
       }
     }
     // CHECK FOR DEPENDENT
     else if (funcName == this.ON_CHANGE_DEPENDENT) {
       if ((<MatCheckboxChange>data.event).checked) {
-        // this.entities.relative_field.read_only = false;
+        this.entities['relative_field'].read_only = false;
         this.crudGrid.configService.form
           .get('relative_field')!
           .setValidators([Validators.required]);
       } else {
-        // this.entities.relative_field.read_only = true;
-        // this.entities.python_funcion.read_only = true;
+        this.entities['relative_field'].read_only = true;
+        this.entities['python_funcion'].read_only = true;
         this.crudGrid.configService.form.get('relative_field')!.setValue('');
         this.crudGrid.configService.form.get('python_funcion')!.setValue('');
         this.crudGrid.configService.form
@@ -221,13 +219,13 @@ export class MappingComponent implements OnInit {
       }
     } else if (funcName == this.ON_CHANGE_RELATIVE_FIELD) {
       if (this.crudGrid.configService.form.get('relative_field')!.value) {
-        // this.entities.python_funcion.read_only = false;
-        // this.entities.python_funcion.required = true;
+        this.entities['python_funcion'].read_only = false;
+        this.entities['python_funcion'].required = true;
         this.crudGrid.configService.form
           .get('python_funcion')!
           .setValidators([Validators.required]);
       } else {
-        // this.entities.python_funcion.read_only = true;
+        this.entities['python_funcion'].read_only = true;
         this.crudGrid.configService.form.get('python_funcion')!.setValue('');
         this.crudGrid.configService.form
           .get('python_funcion')!
@@ -248,9 +246,9 @@ export class MappingComponent implements OnInit {
     this.crudGrid.configService.form.get('is_trainable')!.setValue(false);
     this.crudGrid.configService.form.get('readonly')!.setValue(false);
     this.crudGrid.configService.form.get('ocr_score')!.setValue(false);
-    // this.entities.is_trainable.read_only = false;
-    // this.entities.readonly.read_only = false;
-    // this.entities.ocr_score.read_only = false;
+    this.entities['is_trainable'].read_only = false;
+    this.entities['readonly'].read_only = false;
+    this.entities['ocr_score'].read_only = false;
   }
 
   //Update Validator

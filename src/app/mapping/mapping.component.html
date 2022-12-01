@@ -1,6 +1,6 @@
 <div class="container">
   <ecc-crud-grid #crudGrid [model]="model" (customActions)="onCustomActions($event)"></ecc-crud-grid>
-  <ng-template let-element="element" let-entity="entity" #columnTemplate>
+  <!-- <ng-template let-element="element" let-entity="entity" #columnTemplate>
     <ng-container [ngSwitch]="entity">
         <ng-container *ngSwitchCase="'is_trainable'">
             <ng-container *ngIf="element[entity]; else noCheck">
@@ -36,5 +36,5 @@
             <mat-icon class="red">close</mat-icon>
         </ng-template>
     </ng-container>
-</ng-template>
+</ng-template> -->
 </div>

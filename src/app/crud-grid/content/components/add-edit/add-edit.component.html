@@ -244,12 +244,9 @@
                             )
                           ">*</span>
                       </mat-label>
-                      <mat-select [formControlName]="entity" (selectionChange)="
-                          onFieldValueChange(
-                            $event,
-                            configService.entities[entity]
-                          )
-                        ">
+                      <mat-select [disabled]="configService.entities[entity].read_only ? true : false" 
+                      [formControlName]="entity" 
+                      (selectionChange)="onFieldValueChange($event,configService.entities[entity])">
                         <!-- " [disabled]="
                         configService.entities[entity].read_only
                           ? true
@@ -327,7 +324,7 @@
                             $event,
                             configService.entities[entity]
                           )
-                        ">
+                        " [disabled]="configService.entities[entity].read_only ? true : false">
                         <!-- [disabled]="
                         configService.entities[entity].read_only
                           ? true
@@ -475,7 +472,7 @@
                     <mat-checkbox class="b-field {{entity}}" [formControlName]="entity" (change)="onFieldValueChange(
                       $event,
                       configService.entities[entity]
-                    )">
+                    )" [disabled]="configService.entities[entity].read_only ? true : false">
                       <!-- [disabled]="
                     configService.entities[entity].read_only
                       ? true
